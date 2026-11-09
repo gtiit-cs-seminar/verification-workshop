@@ -13,8 +13,8 @@ case "$(uname -s)-$(uname -m)" in
     Darwin-x86_64) zip=openjml-macos-x86_64-$OPENJML_VERSION.zip ;;
     Linux-x86_64)  zip=openjml-ubuntu-24.04-$OPENJML_VERSION.zip ;;
     Linux-aarch64) zip=openjml-ubuntu-arm64-$OPENJML_VERSION.zip
-                   echo "warning: OpenJML's --esc does not work yet on Linux ARM; use a Codespace (see README)." ;;
-    *) echo "Unsupported platform $(uname -s)-$(uname -m). On Windows use WSL (Ubuntu 24.04) or a Codespace."; exit 1 ;;
+                   echo "warning: OpenJML's --esc does not work yet on Linux ARM; use an x86-64 machine for ./esc." ;;
+    *) echo "Unsupported platform $(uname -s)-$(uname -m). On Windows use WSL (Ubuntu 24.04), see README."; exit 1 ;;
 esac
 
 if [[ -x tools/openjml/openjml ]] && tools/openjml/openjml --version 2>/dev/null | grep -q "$OPENJML_VERSION"; then

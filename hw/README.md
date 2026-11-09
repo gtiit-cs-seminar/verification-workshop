@@ -16,10 +16,11 @@ Then write the contract of `abs`: the result is non-negative and is `n` or `-n`.
 
 **2. SumX** (the example of the lecture). The contract and an invariant are
 given.
-**Q** Which proof obligation fails? Is the program wrong?
+**Q** Which proof obligations fail? Is the program wrong?
 Strengthen the invariant until the method verifies.
 **Q** The precondition says `x <= 1000`. What is the largest bound *N* for which
 `x <= N` still verifies, and what does OpenJML report for *N + 1*? Why?
+Then put back `x <= 1000`: exercise 6 uses it.
 
 **3. Max.** Write loop invariants (and a `decreases` clause) for `max`.
 Keep going until OpenJML reports only failures you cannot fix with better
@@ -44,7 +45,7 @@ The harnesses `*Check.java` call the code you just verified.
 **Q** What input did JBMC find, and what goes wrong with it? Was your hypothesis
 of exercise 3 right?
 **Q** What are the smallest `--unwind` and the smallest
-`--max-nondet-array-length` that still find the bug? Relate them to the lecture's
+`--max-nondet-array-length` that still find the bug (keep `--no-unwinding-assertions`)? Relate them to the lecture's
 small scope hypothesis.
 Now fix `Max.max`, and check it with both tools.
 **Q** Run `./bmc MaxCheck.check --unwind 5` (with unwinding assertions). Why does
@@ -71,3 +72,12 @@ it with `--unwind 1`. **Q** What did it find? Restore your fix and check again.
 
 **8.** Fill in the table in ANSWERS.md for `SumX`, `Max` and `BinarySearch`, and
 answer: when would you use each tool?
+
+## Before you submit
+
+- `./esc` says OK for every file in `hw/`: `Absolute`, `SumX` (with `x <= 1000`), `Max`
+  (invariants and the fix) and `BinarySearch` (the fixed `midpoint`).
+- `./bmc` gives VERIFICATION SUCCESSFUL for `MaxCheck.check --unwind 5 --max-nondet-array-length 4`,
+  `SumXCheck.check --unwind 1001` and `BinarySearchCheck.midpoint --unwind 1`.
+- No `assert false;   // remove this line` is left in a harness.
+- Every question in `ANSWERS.md` is answered.

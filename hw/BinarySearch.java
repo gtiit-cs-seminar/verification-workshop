@@ -2,7 +2,6 @@
 //   ./esc hw/BinarySearch.java
 public class BinarySearch {
 
-    // pure: the call changes nothing, so the caller's loop invariants survive it
     //@ requires 0 <= lo && lo <= hi;
     //@ ensures lo <= \result && \result <= hi;
     static /*@ pure @*/ int midpoint(int lo, int hi) {

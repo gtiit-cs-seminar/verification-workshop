@@ -96,7 +96,9 @@ mathematical integers, the code with 32-bit `int`. See the
 
 ### `./bmc Class.method --unwind K` — JBMC
 
-Compiles the part that has `Class` and runs JBMC on a static method, the **harness**. The
+Compiles all the `.java` files of the folder (`hw/`, `plus/` or `bonus/`) that has
+`Class.java` (a compile error in any of them stops it) and runs JBMC on a static
+method, the **harness**. The
 harness parameters are the inputs: JBMC considers *all* their values at once,
 encoding the program as a SAT formula (lecture: "from code to a formula").
 
@@ -120,7 +122,7 @@ Options:
 | --- | --- |
 | `--unwind K` | unroll every loop *K* times (required) |
 | `--no-unwinding-assertions` | after *K* iterations, `assume !B`: longer executions are ignored. Without it, `assert !B`: JBMC also checks that *K* is enough (lecture: "assume !B or assert !B?") |
-| `--max-nondet-array-length N` | input arrays have length ≤ *N* |
+| `--max-nondet-array-length N` | input arrays have length ≤ *N* (default 5) |
 | `--property ID` | check only one property |
 
 The output lists the properties that fail, the size of the SAT formula, and a

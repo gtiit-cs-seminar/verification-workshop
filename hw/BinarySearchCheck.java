@@ -1,6 +1,6 @@
 import org.cprover.CProver;
 
-// 7. Harnesses for BinarySearch (exercise 4).
+// 7. Harnesses for the BinarySearch of exercise 4.
 //   ./bmc BinarySearchCheck.search --unwind 6 --max-nondet-array-length 5
 public class BinarySearchCheck {
 

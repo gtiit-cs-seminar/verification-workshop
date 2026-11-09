@@ -14,7 +14,7 @@ Q: Which `requires` did you need, and why? Could you avoid it by changing the `e
 
 ### 2. SumX
 
-Q: Which proof obligation fails? Is the program wrong?
+Q: Which proof obligations fail? Is the program wrong?
 
 
 Q: Largest N for which `x <= N` verifies? What happens with N + 1, and why?

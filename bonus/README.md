@@ -17,7 +17,8 @@ K = 2, 3, 4, 5.
 `update`? Fix it and check again.
 **Q** The bug needs only two calls to `addChild`. Why does JBMC need K = 4 to find it?
 **Q** JBMC's input here is a heap: objects, references between them, aliasing.
-How large is the formula compared with the previous exercises? What would you
+How large is the formula compared with the previous exercises (compare K = 4 and 5:
+with K < 4 every execution is cut, and JBMC builds no formula)? What would you
 need to verify `Composite` with OpenJML?
 ★ The original requires `c` to be a single node. Allow subtrees: drop
 `c.firstChild == null` from `addChild` and from the harness's `assume`, and run
@@ -25,9 +26,18 @@ again. Does your invariant notice what goes wrong? If not, add the missing
 property, then fix `addChild` so that subtrees can be added safely.
 
 **2. SafeLock for any number of events.** In homework plus (exercise 5), JBMC
-checked `SafeLock` for sequences of up to K events. Run
-`./esc plus/SafeLock.java` on your fixed version.
+checked `SafeLock` for sequences of up to K events. This exercise works on the
+same file, `plus/SafeLock.java`, with your fix. Run `./esc plus/SafeLock.java`.
 **Q** Why does OpenJML think `failed++` may overflow?
 Write a class invariant (`//@ private invariant ...;`) relating `failed` and
 `state` that makes `SafeLock` verify. Then put the bug of exercise 5 back:
 **Q** Does your invariant catch it? What does this proof give you that JBMC did not?
+Fix the bug again before you submit: the committed `plus/SafeLock.java` must verify
+with your invariant.
+
+## Before you submit
+
+- `./bmc CompositeCheck.addChildren --unwind 5 --no-unwinding-assertions` gives VERIFICATION
+  SUCCESSFUL with your complete invariant and the fixed `update`.
+- `./esc plus/SafeLock.java` says OK with your class invariant.
+- Every question in `ANSWERS.md` is answered.
