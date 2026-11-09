@@ -1,0 +1,132 @@
+{
+    // Terminal > Run Task... (or Cmd/Ctrl+Shift+B for the first one).
+    // Failures are listed in the Problems panel and underlined in the code.
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "OpenJML: verify this file",
+            "type": "shell",
+            "command": "./esc",
+            "args": ["${relativeFile}"],
+            "group": { "kind": "build", "isDefault": true },
+            "presentation": { "panel": "dedicated", "clear": true, "reveal": "always" },
+            "problemMatcher": [
+                {
+                    "owner": "openjml", "source": "OpenJML", "severity": "error",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+\\.java):(\\d+): (?:verify|error): (?!Associated declaration)(.*)$",
+                        "file": 1, "line": 2, "message": 3
+                    }
+                },
+                {
+                    "owner": "openjml", "source": "OpenJML", "severity": "info",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+\\.java):(\\d+): verify: (Associated declaration.*)$",
+                        "file": 1, "line": 2, "message": 3
+                    }
+                },
+                {
+                    "owner": "openjml", "source": "OpenJML", "severity": "warning",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+\\.java):(\\d+): warning: (.*)$",
+                        "file": 1, "line": 2, "message": 3
+                    }
+                }
+            ]
+        },
+        {
+            "label": "OpenJML: verify one method of this file",
+            "type": "shell",
+            "command": "./esc",
+            "args": ["${relativeFile}", "--method", "${input:method}"],
+            "presentation": { "panel": "dedicated", "clear": true, "reveal": "always" },
+            "problemMatcher": [
+                {
+                    "owner": "openjml", "source": "OpenJML", "severity": "error",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+\\.java):(\\d+): (?:verify|error): (?!Associated declaration)(.*)$",
+                        "file": 1, "line": 2, "message": 3
+                    }
+                },
+                {
+                    "owner": "openjml", "source": "OpenJML", "severity": "info",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+\\.java):(\\d+): verify: (Associated declaration.*)$",
+                        "file": 1, "line": 2, "message": 3
+                    }
+                },
+                {
+                    "owner": "openjml", "source": "OpenJML", "severity": "warning",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+\\.java):(\\d+): warning: (.*)$",
+                        "file": 1, "line": 2, "message": 3
+                    }
+                }
+            ]
+        },
+        {
+            "label": "JBMC: check a harness",
+            "type": "shell",
+            "command": "./bmc ${input:harness} ${input:bmcOptions}",
+            "group": "test",
+            "presentation": { "panel": "dedicated", "clear": true, "reveal": "always" },
+            "problemMatcher": {
+                "owner": "jbmc",
+                "source": "JBMC",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "severity": "error",
+                "pattern": {
+                    "regexp": "^\\s+FAILED\\s+(\\S+\\.java):(\\d+)\\s+(.*)$",
+                    "file": 1, "line": 2, "message": 3
+                }
+            }
+        },
+        {
+            "label": "Setup: install OpenJML and check the tools",
+            "type": "shell",
+            "command": "./setup.sh",
+            "presentation": { "panel": "dedicated", "reveal": "always" },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "method",
+            "type": "promptString",
+            "description": "Method name (e.g. sum)"
+        },
+        {
+            "id": "harness",
+            "type": "pickString",
+            "description": "Harness to check",
+            "options": [
+                "MaxCheck.check",
+                "SumXCheck.check",
+                "BinarySearchCheck.search",
+                "BinarySearchCheck.midpoint",
+                "BitTricksCheck.isPowerOfTwo",
+                "BitTricksCheck.average",
+                "BitTricksCheck.nextPowerOfTwo",
+                "BitTricksCheck.absEqualsMathAbs",
+                "BitTricksCheck.absIsNonNegative",
+                "RangeCheck.size",
+                "StackArCheck.operations",
+                "SafeLockCheck.neverOpensAfterTooManyWrongPins",
+                "SafeLockCheck.onlyAdminUnblocks",
+                "CompositeCheck.addChildren"
+            ]
+        },
+        {
+            "id": "bmcOptions",
+            "type": "promptString",
+            "description": "JBMC options (the bound is required)",
+            "default": "--unwind 5 --no-unwinding-assertions"
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Bounded model checking with JBMC.
+#
+#   ./bmc Class.method --unwind K [more jbmc options]
+#
+# Compiles the part (hw/, plus/ or bonus/) that has Class.java, with Java 21, and
+# runs JBMC on the static method Class.method: its parameters are the inputs,
+# JBMC tries all of them. Prints the failed properties and a short counterexample for each.
+#
+# Useful jbmc options:
+#   --unwind K                      unroll every loop K times (required here)
+#   --no-unwinding-assertions       executions longer than K are ignored (bug finding)
+#   --max-nondet-array-length N     input arrays have length <= N
+#   --property ID                   check only one property
+# Set BMC_FULL=1 to also list the properties that hold, BMC_RAW=1 for JBMC's own output.
+set -euo pipefail
+cd "$(dirname "$0")"
+
+if [[ $# -lt 1 || "$1" == -* ]]; then
+    sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+    exit 2
+fi
+entry=$1
+shift
+if ! printf '%s\n' "$@" | grep -q -- '^--unwind$'; then
+    echo "bmc: give a bound with --unwind K (without it JBMC unrolls loops until they end, maybe never)." >&2
+    exit 2
+fi
+command -v jbmc >/dev/null || { echo "bmc: jbmc not found, see README (Setup)." >&2; exit 2; }
+
+lib=$(tools/find-jbmc-lib) || exit 2
+
+# only the part that has the harness is compiled, so unfinished code elsewhere does not matter
+class=${entry%.*}
+part=""
+for d in hw plus bonus; do
+    if [[ -f "$d/$class.java" ]]; then part=$d; fi
+done
+[[ -n "$part" ]] || { echo "bmc: no $class.java in hw/, plus/ or bonus/" >&2; exit 2; }
+sources=("$part"/*.java)
+
+# -XDstringConcat=inline: string + uses StringBuilder instead of invokedynamic, which JBMC does not model
+rm -rf build/classes
+mkdir -p build/classes
+javac --release 21 -g -nowarn -XDstringConcat=inline -cp "$lib/cprover-api.jar" -d build/classes "${sources[@]}"
+
+cmd=(jbmc "$entry" "$@" --java-unwind-enum-static
+     --classpath "build/classes:$lib/cprover-api.jar:$lib/core-models.jar")
+echo "\$ jbmc $entry $*"
+if [[ -n "${BMC_RAW:-}" ]]; then
+    exec "${cmd[@]}" --trace
+fi
+"${cmd[@]}" --trace --json-ui > build/jbmc.json || true
+python3 tools/jbmc_report.py build/jbmc.json "${sources[@]}"

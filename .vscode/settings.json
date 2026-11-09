@@ -1,0 +1,12 @@
+{
+    // Java extension (redhat.java): the three source folders form one project, and
+    // JBMC's cprover-api.jar (copied to tools/lib by ./setup.sh) resolves org.cprover.CProver.
+    "java.project.sourcePaths": ["hw", "plus", "bonus"],
+    "java.project.referencedLibraries": ["tools/lib/cprover-api.jar"],
+    "java.project.outputPath": "build/vscode",
+    "files.exclude": {
+        "build": true,
+        "tools/openjml": true,
+        "tools/lib": true
+    }
+}

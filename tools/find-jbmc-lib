@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Prints the folder that has JBMC's cprover-api.jar (CProver.assume, nondetInt, ...)
+# and core-models.jar (its model of java.lang). They ship with JBMC; the folder
+# depends on how it was installed. Override with JBMC_LIB.
+set -euo pipefail
+here=$(cd "$(dirname "$0")" && pwd)
+
+if [[ -n "${JBMC_LIB:-}" ]]; then
+    candidates=("$JBMC_LIB")
+else
+    candidates=("$here/lib")              # copied there by setup.sh
+    if command -v jbmc >/dev/null; then
+        bin=$(dirname "$(readlink -f "$(command -v jbmc)")")
+        candidates+=("$bin/../libexec/lib" "$bin/../lib" "$bin/../share/jbmc")
+    fi
+    candidates+=(/usr/lib /usr/local/lib /usr/share/jbmc)
+fi
+for d in "${candidates[@]}"; do
+    if [[ -f "$d/cprover-api.jar" && -f "$d/core-models.jar" ]]; then
+        (cd "$d" && pwd)
+        exit 0
+    fi
+done
+echo "cannot find cprover-api.jar and core-models.jar; set JBMC_LIB to the folder that has them" >&2
+exit 1

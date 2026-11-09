@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Deductive verification with OpenJML.
+#
+#   ./esc hw/File.java [more openjml options]
+#
+# Checks every method of the file against its JML contract (extended static
+# checking, --esc). Silence means every proof obligation was discharged.
+#
+# Useful openjml options:
+#   --method NAME        check only one method
+#   --timeout SECONDS    give up on a proof obligation after SECONDS (default here: 60)
+#   --progress           show which method is being checked
+set -euo pipefail
+cd "$(dirname "$0")"
+
+if [[ $# -lt 1 || "$1" == -* ]]; then
+    sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
+    exit 2
+fi
+openjml=${OPENJML:-tools/openjml/openjml}
+[[ -x "$openjml" ]] || { echo "esc: OpenJML not found in tools/openjml, run ./setup.sh" >&2; exit 2; }
+
+echo "\$ openjml --esc $*"
+status=0
+"$openjml" --esc --timeout 60 --source-path "$(dirname "$1")" "$@" || status=$?
+case $status in
+    0) echo "OK: all proof obligations verified" ;;
+    6) echo "NOT VERIFIED: see the messages above" ;;
+    *) echo "OpenJML stopped with exit code $status (a syntax or type error in the code or the JML?)" ;;
+esac
+exit $status
