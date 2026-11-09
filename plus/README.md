@@ -1,4 +1,4 @@
-# Homework plus: LLMs, bit tricks, and classes with state
+# Homework plus: LLMs, a famous bug, and classes with state
 
 Deadline: **November 24, 2026**. Do [the homework](../hw/README.md) first: this part
 uses the same commands and ideas. Write your answers in [ANSWERS.md](ANSWERS.md).
@@ -20,26 +20,38 @@ invariants: `count`, `reverse`, `isqrt` and `dutchFlag`. For each one:
 - **Q** Why is it safe to use invariants written by an LLM here, even if the LLM
   is often wrong?
 
-## 2. Bit tricks
+## 2. The Zune bug
 
-`BitTricks.java` has four fast functions, each with a slow reference version. Some
-fast versions are wrong. `BitTricksCheck.isPowerOfTwo` checks that the fast and slow
-versions agree on every input. Write the harnesses `average`, `nextPowerOfTwo` (only
-for `1 <= cap <= 2^30`), `absEqualsMathAbs` and `absIsNonNegative`, and run them all
-with `--unwind 32`.
+On December 31, 2008, every Microsoft Zune 30 (a music player) froze for the whole
+day. The cause was the loop in `Zune.yearOf`, which turns the number of days since
+January 1, 1980 into a year (translated here from C to Java).
+`ZuneCheck.yearOfInRange` checks it for every day of the first 30 years.
 
-Answer these questions *before* changing `BitTricks.java`:
+Run `./bmc ZuneCheck.yearOfInRange --unwind 31 --no-unwinding-assertions`.
 
-- **Q** Which functions are wrong, for which inputs?
-- **Q** For the correct ones JBMC says SUCCESSFUL, with unwinding assertions on.
-  How many inputs did it cover? Is it a proof?
-- **Q** Run `./bmc BitTricksCheck.isPowerOfTwo --unwind 5 --no-unwinding-assertions`
-  on the buggy `isPowerOfTwo`. Why SUCCESSFUL?
-- **Q** `absIsNonNegative` fails. Is `BitTricks.abs` wrong?
+- **Q** It says SUCCESSFUL. Does that mean `yearOf` is correct for every day it checked?
 
-Then fix the functions that are wrong and run all the harnesses again.
+Run it again without `--no-unwinding-assertions`.
 
-★ Write a JML contract for `isPowerOfTwo` and try OpenJML on it.
+- **Q** What does JBMC report now? Look at the values of `days` in the counterexample:
+  is K too small, or is something else wrong? (Try a larger K.)
+- **Q** What is wrong with the loop? Which date froze the Zune?
+
+Fix `yearOf`.
+
+- **Q** With your fix, what is the smallest K that gives VERIFICATION SUCCESSFUL
+  with unwinding assertions? What exactly has been proved?
+
+`yearOfInRange` only checks that the year is in range. Write
+`ZuneCheck.yearOfIsRight`: the day falls in the year that `yearOf` returns (use
+`daysBefore`). Run it with the same K.
+
+- **Q** A colleague "fixes" the bug by changing `days > 366` to `days >= 366`. Try it:
+  which of the two harnesses notices, and why? Then undo it.
+
+★ `yearOf` also has a JML contract and a loop invariant. Run `./esc plus/Zune.java`
+on the original code: why does it say OK? Add `//@ decreases days;` above the loop
+and run it again. (Lecture: partial and total correctness.)
 
 ## 3. Range
 
@@ -95,10 +107,10 @@ Write `SafeLockCheck.onlyAdminUnblocks` (a blocked safe leaves BLOCKED only by a
 
 ## Before you submit
 
-- `./esc` says OK for `LlmLoops`, `Range` (the code fixed, the contract unchanged) and
-  `StackAr` (implemented, with your contracts, without the bug you introduced).
-- `./bmc` gives VERIFICATION SUCCESSFUL for the `BitTricksCheck` harnesses except
-  `absIsNonNegative` (with `--unwind 32`), for `RangeCheck.size --unwind 1`, for
+- `./esc` says OK for `LlmLoops`, `Zune` (fixed), `Range` (the code fixed, the contract
+  unchanged) and `StackAr` (implemented, with your contracts, without the bug you introduced).
+- `./bmc` gives VERIFICATION SUCCESSFUL for both `ZuneCheck` harnesses with `--unwind 30`
+  (with unwinding assertions), for `RangeCheck.size --unwind 1`, for
   `StackArCheck.operations --unwind 5 --no-unwinding-assertions` and, on the fixed
   `SafeLock`, for both `SafeLockCheck` harnesses with `--unwind 8 --no-unwinding-assertions`.
 - No `assert false;   // remove this line` is left in a harness.

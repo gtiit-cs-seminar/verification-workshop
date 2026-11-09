@@ -21,7 +21,7 @@ exercises marked ★ are optional.
 | Part | What | Deadline |
 | --- | --- | --- |
 | [`hw/`](hw/README.md) | **Homework**: the lecture's examples (abs, sumx, max, binary search) with both tools | November 17, 2026 |
-| [`plus/`](plus/README.md) | **Homework plus**: invariants from an LLM, bit tricks, and classes with state (a record, a stack, a state machine) | November 24, 2026 |
+| [`plus/`](plus/README.md) | **Homework plus**: invariants from an LLM, the Zune bug, and classes with state (a record, a stack, a state machine) | November 24, 2026 |
 | [`bonus/`](bonus/README.md) | **Bonus** (optional): a data structure on the heap, and a proof for any number of events | December 7, 2026 |
 
 Start with `hw/`: it introduces everything the other parts use.

@@ -15,18 +15,24 @@ Name(s):
 Q: Why is it safe to use invariants written by an LLM here, even if the LLM is often wrong?
 
 
-### 2. Bit tricks
+### 2. The Zune bug
 
-Q: Which functions are wrong, for which inputs?
-
-
-Q: For the correct ones, how many inputs were covered? Is it a proof?
+Q: `--unwind 31 --no-unwinding-assertions` says SUCCESSFUL. Does that mean `yearOf` is correct for every day it checked?
 
 
-Q: Why does `--unwind 5 --no-unwinding-assertions` say SUCCESSFUL on the buggy `isPowerOfTwo`?
+Q: What does JBMC report without `--no-unwinding-assertions`? Is K too small, or is something else wrong?
 
 
-Q: `absIsNonNegative` fails. Is `BitTricks.abs` wrong?
+Q: What is wrong with the loop? Which date froze the Zune?
+
+
+Q: With your fix, what is the smallest K that gives VERIFICATION SUCCESSFUL with unwinding assertions? What exactly has been proved?
+
+
+Q: A colleague changes `days > 366` to `days >= 366`. Which harness notices, and why?
+
+
+Q (★): Why does `./esc` say OK on the original? What changes with `decreases`?
 
 
 ### 3. Range
