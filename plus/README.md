@@ -2,6 +2,7 @@
 
 Deadline: **November 24, 2026**. Do [the homework](../hw/README.md) first: this part
 uses the same commands and ideas. Write your answers in [ANSWERS.md](ANSWERS.md).
+Stuck? [HINTS.md](HINTS.md) has step-by-step hints for each exercise.
 
 ## 1. Invariants from an LLM
 

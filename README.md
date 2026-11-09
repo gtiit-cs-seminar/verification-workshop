@@ -15,7 +15,8 @@ In this workshop you use both tools on the **same programs**, written in
 what each one asks from you and what each one gives you back.
 
 The workshop has three parts. Each folder has its exercises (`README.md`), the
-code, and an `ANSWERS.md` for your answers; questions are marked **Q**, and
+code, an `ANSWERS.md` for your answers and, in `hw/` and `plus/`, a `HINTS.md` with
+hints for when you are stuck; questions are marked **Q**, and
 exercises marked ★ are optional.
 
 | Part | What | Deadline |

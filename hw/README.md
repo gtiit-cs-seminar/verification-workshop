@@ -2,6 +2,7 @@
 
 Deadline: **November 17, 2026**. Read the [main README](../README.md) first
 (setup and the two commands). Write your answers in [ANSWERS.md](ANSWERS.md).
+Stuck? [HINTS.md](HINTS.md) has general tips and step-by-step hints for each exercise.
 
 Exercises 1–4 use OpenJML (way A, loop invariants), exercises 5–7 use JBMC on
 the same programs (way B, unrolling), and exercise 8 compares them.
